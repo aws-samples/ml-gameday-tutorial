@@ -1,0 +1,11 @@
+{
+    "namespace":"dev",
+    "project":"battleship-bootstrap",
+    "profile":"default",
+    "region":"us-east-1",
+    "parameters":{
+        "MasterAccount":"",
+        "GameArchiveBucket":""
+    }
+}
+

@@ -1,0 +1,6 @@
+.ipynb_checkpoints
+tmp/*
+*/mock/out/*
+build/*
+config.json
+data

@@ -1,0 +1,408 @@
+{
+  "Parameters": {
+    "AssetBucket": {
+      "Type": "String"
+    },
+    "AssetPrefix": {
+      "Type": "String"
+    },
+    "NumberOfHumanWorkersPerDataObject": {
+      "Type": "String"
+    },
+    "PreHumanTaskLambdaArn": {
+      "Type": "String"
+    },
+    "TaskTimeLimitInSeconds": {
+      "Type": "String"
+    },
+    "UiTemplateS3Uri": {
+      "Type": "String"
+    },
+    "WorkteamArn": {
+      "Type": "String"
+    },
+    "MaxConcurrentTaskCount": {
+      "Type": "String"
+    },
+    "TaskAvailabilityLifetimeInSeconds": {
+      "Type": "String"
+    },
+    "MaxHumanLabeledObjectCount": {
+      "Type": "String"
+    },
+    "MaxPercentageOfInputDatasetLabeled": {
+      "Type": "String"
+    }
+  },
+  "Conditions": {},
+  "Outputs": {},
+  "Resources": {
+    "S3ClearLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": "var aws=require(\"aws-sdk\"),response=require(\"cfn-response\");aws.config.region=process.env.AWS_REGION;var s3=new aws.S3;exports.handler=function(event,context,callback){console.log(JSON.stringify(event,null,2));var params=event.ResourceProperties;\"Delete\"===event.RequestType?new Promise(function(res,rej){!function next(){s3.listObjectVersions({Bucket:params.Bucket,Prefix:params.Prefix}).promise().then(x=>x.Versions.concat(x.DeleteMarkers)).then(function(files){return files.map(file=>({Key:file.Key,VersionId:file.VersionId}))}).then(function(keys){if(keys.length>0)return s3.deleteObjects({Bucket:params.Bucket,Delete:{Objects:keys}}).promise().then(()=>next()).catch(rej);res()})}()}).then(()=>response.send(event,context,response.SUCCESS)).catch(e=>{console.log(e),response.send(event,context,response.FAILED)}):response.send(event,context,response.SUCCESS)};"
+        },
+        "Handler": "index.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "CFNLambdaRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs6.10",
+        "Timeout": 60,
+        "Layers": [
+          {
+            "Ref": "UtilLambdaLayer"
+          }
+        ]
+      }
+    },
+    "S3NotificationLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": "var aws=require(\"aws-sdk\"),response=require(\"cfn-response\");aws.config.region=process.env.AWS_REGION;var s3=new aws.S3;exports.handler=function(event,context,callback){console.log(JSON.stringify(event,null,2));var params=event.ResourceProperties;delete params.ServiceToken,\"Delete\"!==event.RequestType?s3.putBucketNotificationConfiguration(params).promise().then(()=>response.send(event,context,response.SUCCESS)).catch(e=>{console.log(e),response.send(event,context,response.FAILED)}):response.send(event,context,response.SUCCESS)};"
+        },
+        "Handler": "index.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "CFNLambdaRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs6.10",
+        "Timeout": 60,
+        "Layers": [
+          {
+            "Ref": "UtilLambdaLayer"
+          }
+        ]
+      }
+    },
+    "S3VersionLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": "var aws=require(\"aws-sdk\"),response=require(\"cfn-response\");aws.config.region=process.env.AWS_REGION;var s3=new aws.S3;exports.handler=function(event,context,callback){console.log(JSON.stringify(event,null,2));var params=event.ResourceProperties;\"Delete\"!==event.RequestType?s3.headObject({Bucket:params.Bucket,Key:params.Key}).promise().then(result=>response.send(event,context,response.SUCCESS,{},result.VersionId)).catch(error=>{console.log(error),response.send(event,context,response.FAILED)}):response.send(event,context,response.SUCCESS)};"
+        },
+        "Handler": "index.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "CFNLambdaRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs6.10",
+        "Timeout": 60
+      }
+    },
+    "VariableLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": "var response=require(\"cfn-response\");exports.handler=function(event,context,callback){console.log(JSON.stringify(event,null,2));var params=event.ResourceProperties;delete params.ServiceToken,Object.keys(params).forEach(function(key){var value=params[key];\"object\"==typeof value&&(\"toLowerCase\"===value.op?params[key]=value.value.toLowerCase():params[key]=value.value)}),response.send(event,context,response.SUCCESS,params)};"
+        },
+        "Handler": "index.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "CFNLambdaRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs6.10",
+        "Timeout": 60,
+        "Layers": [
+          {
+            "Ref": "UtilLambdaLayer"
+          }
+        ]
+      }
+    },
+    "CFNLambdaRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Path": "/",
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        ]
+      }
+    },
+    "StepFunctionCrawlerStart": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": "var aws=require('aws-sdk')\naws.config.region=process.env.AWS_REGION\nvar glue=new aws.Glue()\n\nexports.handler=function(event,context,callback){\n    console.log(JSON.stringify(event,null,2))\n\n    try{\n        glue.startCrawler({\n            Name:event.Crawler\n        }).promise()\n        .then(result=>{\n            result.retry=false\n            callback(null,result)\n        })\n        .catch(error=>callback(new Error(error)))\n    }catch(error){\n        callback(new Error(error))\n    }\n}   \n"
+        },
+        "Handler": "index.handler",
+        "MemorySize": "1024",
+        "Role": {
+          "Fn::GetAtt": [
+            "StepLambdaRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Environment": {
+          "Variables": {}
+        },
+        "TracingConfig": {
+          "Mode": "Active"
+        },
+        "Layers": [
+          {
+            "Ref": "UtilLambdaLayer"
+          }
+        ],
+        "Timeout": 900,
+        "Tags": [
+          {
+            "Key": "Type",
+            "Value": "StepFunction"
+          }
+        ]
+      }
+    },
+    "StepFunctionCrawlerStatus": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": "var aws=require('aws-sdk')\naws.config.region=process.env.AWS_REGION\nvar glue=new aws.Glue()\n\nexports.handler=function(event,context,callback){\n    console.log(JSON.stringify(event,null,2))\n\n    try{\n        glue.getCrawler({\n            Name:event.params.Crawler\n        }).promise()\n        .then(result=>{\n            var out=result.Crawler\n            out.finished=(out.State===\"READY\")\n            callback(null,out)\n        })\n        .catch(error=>callback(new Error(error)))\n    }catch(error){\n        callback(new Error(error))\n    }\n}   \n"
+        },
+        "Handler": "index.handler",
+        "MemorySize": "1024",
+        "Role": {
+          "Fn::GetAtt": [
+            "StepLambdaRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Environment": {
+          "Variables": {}
+        },
+        "TracingConfig": {
+          "Mode": "Active"
+        },
+        "Layers": [
+          {
+            "Ref": "UtilLambdaLayer"
+          }
+        ],
+        "Timeout": 900,
+        "Tags": [
+          {
+            "Key": "Type",
+            "Value": "StepFunction"
+          }
+        ]
+      }
+    },
+    "StepLambdaRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Path": "/",
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess",
+          "arn:aws:iam::aws:policy/AWSLambdaFullAccess",
+          "arn:aws:iam::aws:policy/ComprehendFullAccess"
+        ],
+        "Policies": [
+          {
+            "PolicyName": "Access",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:*",
+                    "glue:*",
+                    "cloudformation:*"
+                  ],
+                  "Resource": "*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "neptune-db:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:neptune-db:*:*:*/*"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "StateMachineLabelingJob": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "DefinitionString": {
+          "Fn::Sub": "{\"Comment\":\"\",\"StartAt\":\"start\",\"States\":{\"start\":{\"Type\":\"Pass\",\"Next\":\"CreateManifest\"},\"CreateManifest\":{\"Type\":\"Pass\",\"Next\":\"CreateLabelingJob\"},\"CreateLabelingJob\":{\"Type\":\"Pass\",\"End\":true}}}"
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "StepFunctionRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "StateMachinePostProcess": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "DefinitionString": {
+          "Fn::Sub": "{\"Comment\":\"\",\"StartAt\":\"start\",\"States\":{\"start\":{\"Type\":\"Pass\",\"Next\":\"RunCrawler\"},\"RunCrawler\":{\"Type\":\"Pass\",\"Next\":\"ScoreData\"},\"ScoreData\":{\"Type\":\"Pass\",\"End\":true}}}"
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "StepFunctionRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "StateMachinePreProcess": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "DefinitionString": {
+          "Fn::Sub": "{\"Comment\":\"\",\"StartAt\":\"start\",\"States\":{\"start\":{\"Type\":\"Pass\",\"Next\":\"RunCrawler\"},\"RunCrawler\":{\"Type\":\"Pass\",\"Next\":\"FormatData\"},\"FormatData\":{\"Type\":\"Pass\",\"End\":true}}}"
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "StepFunctionRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "StepFunctionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "states.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "Access",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "CloudWatchLogsPolicy",
+                  "Effect": "Allow",
+                  "Action": [
+                    "lambda:InvokeFunction"
+                  ],
+                  "Resource": [
+                    "*"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "UtilCodeVersion": {
+      "Type": "Custom::S3Version",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "S3VersionLambda",
+            "Arn"
+          ]
+        },
+        "Bucket": {
+          "Ref": "AssetBucket"
+        },
+        "Key": {
+          "Fn::Sub": "${AssetPrefix}/lambda/util.zip"
+        },
+        "BuildDate": "2019-07-08T14:58:22.999Z"
+      }
+    },
+    "UtilLambdaLayer": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "Content": {
+          "S3Bucket": {
+            "Ref": "AssetBucket"
+          },
+          "S3Key": {
+            "Fn::Sub": "${AssetPrefix}/lambda/util.zip"
+          },
+          "S3ObjectVersion": {
+            "Ref": "UtilCodeVersion"
+          }
+        },
+        "LayerName": {
+          "Fn::Sub": "${AWS::StackName}-util"
+        }
+      }
+    },
+    "SageBuild": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": {
+          "Fn::Sub": "https://s3.amazonaws.com/${AssetBucket}/${AssetPrefix}/templates/main.json"
+        },
+        "Parameters": {
+          "AssetBucket": {
+            "Ref": "AssetBucket"
+          },
+          "AssetPrefix": {
+            "Ref": "AssetPrefix"
+          },
+          "NoteBookInstanceType": "NONE"
+        }
+      }
+    }
+  },
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": ""
+}
