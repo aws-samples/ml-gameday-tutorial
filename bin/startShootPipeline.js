@@ -11,7 +11,7 @@ GetOutput().then(async output=>{
         Message:"{}",
         TopicArn:output.ShootLaunchTopic   
     }).promise()
-    console.log("Layout pipeline started succesfully")
+    console.log("Shoot pipeline started succesfully")
     console.log(result)
     return output
 })

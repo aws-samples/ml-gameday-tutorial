@@ -1,6 +1,6 @@
 {
     "namespace":"dev",
-    "project":"battleship-bootstrap",
+    "project":"ai-command",
     "profile":"default",
     "region":"us-east-1",
     "parameters":{
