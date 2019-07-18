@@ -109,7 +109,7 @@ module.exports={
       }
     },
     "AssetPrefix": {
-      "Value": "artifacts/aws-ai-qna-bot"
+      "Value": "SageBuild"
     }
   },
   "Parameters": {

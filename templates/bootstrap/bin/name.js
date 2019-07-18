@@ -7,6 +7,10 @@ var project=config.project
 exports.inc=()=>run({inc:true})
 exports.get=()=>run({inc:false})
 
+if(require.main === module){
+    console.log(run({inc:false}))
+}
+
 function run(options={}){
     var namespace=options.namespace || config.namespace
 
