@@ -9,6 +9,7 @@
     "update": "make && ./bin/upload.sh && ./templates/main/bin/update.js",
     "down": "./templates/main/bin/delete.js",
     "upload": "make && ./bin/upload.sh",
+    "upload-public":"make && ./bin/upload-public.sh",
     "jupyter":"cd notebooks && jupyter notebook"
   },
   "keywords": [],

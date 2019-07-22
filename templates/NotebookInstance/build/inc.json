@@ -1,0 +1,10 @@
+{
+  "default": {
+    "dev": {
+      "us-east-1": 1
+    },
+    "notebook": {
+      "us-east-1": 3
+    }
+  }
+}
