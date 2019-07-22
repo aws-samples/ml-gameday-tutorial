@@ -9,7 +9,16 @@ module.exports=Object.assign({},{
             InstanceType:"ml.t2.large",
             RoleArn:{"Fn::GetAtt":["NotebookRole","Arn"]},
             NotebookInstanceName:{"Ref":"AWS::StackName"},
-            DefaultCodeRepository:{"Fn::Sub":"https://git-codecommit.${AWS::Region}.amazonaws.com/v1/repos/${CodeCommitRepoName}"}
+            DefaultCodeRepository:{"Fn::Sub":"https://git-codecommit.${AWS::Region}.amazonaws.com/v1/repos/${CodeCommitRepoName}"},
+            LifecycleConfigName:{"Fn::GetAtt":["SageMakerNotebookLifecycle","NotebookInstanceLifecycleConfigName"]}
+        }
+    },
+    "SageMakerNotebookLifecycle":{
+        "Type" : "AWS::SageMaker::NotebookInstanceLifecycleConfig",
+        "Properties" : {
+            OnStart:[{
+                Content:{"Fn::Base64":{"Fn::Sub":fs.readFileSync(`${__dirname}/scripts/OnStart.sh`,"utf-8")}}
+            }]
         }
     },
     "NotebookRole":{

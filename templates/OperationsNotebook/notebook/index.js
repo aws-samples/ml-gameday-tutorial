@@ -8,7 +8,16 @@ module.exports=Object.assign({},{
         "Properties" : {
             InstanceType:"ml.t2.large",
             RoleArn:{"Fn::GetAtt":["NotebookRole","Arn"]},
-            NotebookInstanceName:{"Ref":"AWS::StackName"}
+            NotebookInstanceName:{"Ref":"AWS::StackName"},
+            LifecycleConfigName:{"Fn::GetAtt":["SageMakerNotebookLifecycle","NotebookInstanceLifecycleConfigName"]}
+        }
+    },
+    "SageMakerNotebookLifecycle":{
+        "Type" : "AWS::SageMaker::NotebookInstanceLifecycleConfig",
+        "Properties" : {
+            OnStart:[{
+                Content:{"Fn::Base64":{"Fn::Sub":fs.readFileSync(`${__dirname}/scripts/OnStart.sh`,"utf-8")}}
+            }]
         }
     },
     "NotebookRole":{
