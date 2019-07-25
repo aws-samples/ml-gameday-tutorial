@@ -1,6 +1,7 @@
 .ipynb_checkpoints
 tmp/*
-*/mock/out/*
+*/mock/*
+*/build/*
 build/*
 config.json
 data

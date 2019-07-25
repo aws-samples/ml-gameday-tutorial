@@ -1,0 +1,13 @@
+{
+  "default": {
+    "bucket": {
+      "us-east-1": 15
+    },
+    "main": {
+      "us-east-1": 5
+    },
+    "dev": {
+      "us-east-1": 33
+    }
+  }
+}

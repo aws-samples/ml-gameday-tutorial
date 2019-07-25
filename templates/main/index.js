@@ -58,7 +58,7 @@ module.exports={
     require('./sagebuild'),
     require('./lambda'),
     require('./glue'),
-    require('./role')
+    require('./role'),
   ),
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": ""

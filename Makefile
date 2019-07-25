@@ -3,7 +3,7 @@ TEMPLATES=$(shell for l in $$(ls ./templates );do echo templates/$$l;done)
 
 all: build containers lambda templates assets
 
-assets: build
+assets: build 
 	cp -r ./assets/* ./build
 
 lambda: build
