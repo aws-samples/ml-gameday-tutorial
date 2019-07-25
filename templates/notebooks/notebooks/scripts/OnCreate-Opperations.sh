@@ -15,6 +15,7 @@ cd GameDayRepo
 git remote set-url origin ${Repo.CloneUrlHttp}
 git branch layout
 git branch shoot
+git branch dev
 sudo -u ec2-user git push --all -u 
 
 cat << EOF > config.json

@@ -14,7 +14,8 @@ sudo -u ec2-user git clone ${Repo.CloneUrlHttp}
 mv ${Repo.Name} GameDayRepo
 cd GameDayRepo
 
-git checkout -b $TEAM
+sudo -u ec2-user npm install
+sudo -u ec2-user git checkout -b $TEAM
 cat << EOF > config.json
 {
     "namespace":"$TEAM",

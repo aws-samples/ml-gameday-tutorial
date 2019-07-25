@@ -1,7 +1,9 @@
 .ipynb_checkpoints
+package-lock.json
 tmp/*
 */mock/*
 */build/*
 build/*
 config.json
 data
+node_modules
