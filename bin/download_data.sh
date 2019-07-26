@@ -9,7 +9,7 @@ BLUE=$(tput setaf 4)
 RESET=$(tput sgr0)
 echo bootstrap bucket is $BLUE$BUCKET/$PREFIX$RESET
 
-DATA_DIR=../data
+DATA_DIR=$__dirname/../data
 mkdir -p $DATA_DIR/tmp 
 mkdir -p $DATA_DIR/all 
 echo "Downloading data"
