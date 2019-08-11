@@ -1,9 +1,9 @@
-NAME:=$(shell basename $(shell pwd) )
-DST=../../build/$(NAME).tar.gz
+BATCHES=$(shell for l in $$(ls . | grep -v tmp | grep -v README.md | grep -v Makefile);do echo ./$$l;done)
 
-all: $(DST)
+.PHONY: build 
 
-$(DST): host.py train.py
-	echo "Building $(NAME) tar"; rm $(DST);  tar -zcvf $(DST) --exclude='./tmp/' --exclude='./mock/' . 
-
-
+build: $(BATCHES)
+	for container in $(BATCHES); do\
+		$(MAKE) -C $$container;	\
+	done	\
+		

@@ -1,7 +1,7 @@
 var _=require('lodash')
 var fs=require('fs')
 module.exports=Object.assign(
-    {},{ }
+    {},bucket("Data")
 )
 
 function bucket(name,opts={}){

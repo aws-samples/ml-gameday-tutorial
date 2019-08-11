@@ -37,7 +37,7 @@ var table_inprogress = grid.set(6,0,6,12,contrib.table,
  , height: '40%'
  , border: {type: "line", fg: "cyan"}
  , columnSpacing: 8 //in chars
- , columnWidth: [12,12,12,12] /*in chars*/ })
+ , columnWidth: [12,20,12,12] /*in chars*/ })
 //allow control the table with the keyboard
 screen.key(['c'], function(ch, key) {
     table_completed.focus()
@@ -61,7 +61,7 @@ Promise.all([
         out=_.get(result,"TrainingJobSummaries",[])
             .map(x=>{
                 out=_.mapValues(x.TunedHyperParameters,
-                    x=>parseFloat(x).toFixed(5))
+                    x=>parseFloat(x).toFixed(8))
                 //out.id=x.TrainingJobName
                 out.Score=_.get(x,"FinalHyperParameterTuningJobObjectiveMetric.Value",0)
                 return out
@@ -84,7 +84,7 @@ Promise.all([
         out=_.get(result,"TrainingJobSummaries",[])
             .map(x=>{
                 out=_.mapValues(x.TunedHyperParameters,
-                    x=>x)
+                    x=>parseFloat(x))
                 return out
             })
 

@@ -1,0 +1,1 @@
+{"batch_size": "1024", "patience": "40", "width": "64", "checkpoint_path": "s3://ai-command-dev-5-shootpipeline-7-checkpointbucket-gavbdxj1geo/ai-command-dev-5-ShootPipeline-70RCEKQOT261-v3-1565463332612/checkpoints", "depth": "15", "epochs": 800, "learning_rate": "0.005"}

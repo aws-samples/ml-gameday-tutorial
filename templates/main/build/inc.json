@@ -1,0 +1,13 @@
+{
+  "GameDay": {
+    "dev": {
+      "us-east-1": 1
+    }
+  },
+  "default": {
+    "dev": {
+      "us-east-1": 5,
+      "us-west-2": 2
+    }
+  }
+}

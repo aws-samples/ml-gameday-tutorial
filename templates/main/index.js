@@ -15,6 +15,9 @@ module.exports={
     }
   },
   "Outputs":{
+    "GlueDatabase":{"Value":{"Ref":"DataCatalog"}},
+    "GlueTable":{"Value":{"Ref":"GameArchiveBucket"}},
+    "DataBucket":{"Value":{"Ref":"DataBucket"}},
     "LayoutEndpoint":{
         "Value":{"Fn::GetAtt":["LayoutPipeline","Outputs.SageMakerEndpoint"]}
     },
@@ -24,17 +27,11 @@ module.exports={
     "LayoutLaunchTopic":{
         "Value":{"Fn::GetAtt":["LayoutPipeline","Outputs.LaunchTopic"]}
     },
-    "LayoutDataBucket":{
-        "Value":{"Fn::GetAtt":["LayoutPipeline","Outputs.DataBucket"]}
-    },
     "LayoutStateMachine":{
         "Value":{"Fn::GetAtt":["LayoutPipeline","Outputs.StateMachine"]}
     },
     "ShootStateMachine":{
         "Value":{"Fn::GetAtt":["ShootPipeline","Outputs.StateMachine"]}
-    },
-    "ShootDataBucket":{
-        "Value":{"Fn::GetAtt":["ShootPipeline","Outputs.DataBucket"]}
     },
     "ShootEndpoint":{
         "Value":{"Fn::GetAtt":["ShootPipeline","Outputs.SageMakerEndpoint"]}

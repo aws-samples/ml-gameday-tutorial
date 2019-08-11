@@ -17,6 +17,6 @@ containers: build
 
 templates: build
 	for l in $(TEMPLATES); do	\
-		$$l/bin/check.js; \
+		make -C $$l; \
 	done;			
 
