@@ -8,6 +8,7 @@
     "up": "make && ./bin/upload.sh && ./templates/main/bin/launch.js",
     "update": "make && ./bin/upload.sh && ./templates/main/bin/update.js",
     "down": "./templates/main/bin/delete.js",
+    "down_bootstrap": "./templates/main/bootstrap/delete.js",
     "upload": "make && ./bin/upload.sh",
     "upload-public": "make && ./bin/upload-public.sh",
     "jupyter": "cd notebooks && jupyter notebook"

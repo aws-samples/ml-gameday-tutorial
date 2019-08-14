@@ -25,4 +25,4 @@ done
 head -n 10 $DATA_DIR/data.json > $DATA_DIR/data.min.json
 
 echo "Data file is located at $DATA_DIR/data.json"
-echo "sample data file is located at $DATA_DIR/data.json"
+echo "sample data file is located at $DATA_DIR/data.min.json"

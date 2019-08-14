@@ -28,7 +28,7 @@ module.exports=Object.assign({
                         epochs:200,
                         learning_rate:"0.005",
                         width:"64",
-                        depth:"15",
+                        depth:"12",
                         patience:"10",
                         batch_size:"1024"
                     },
