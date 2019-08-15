@@ -18,22 +18,15 @@ module.exports=Object.assign({
                     maxparalleltrainingjobs:2,
                     trainmaxrun:5,
                     inputmode:"File",
-                    trainsourcefile:"s3://${AssetBucket}/${AssetPrefix}/layout-first.tar.gz",
+                    trainsourcefile:"s3://${AssetBucket}/${AssetPrefix}/layout-random-2.tar.gz",
                     trainentrypoint:"train.py",
-                    hostsourcefile:"s3://${AssetBucket}/${AssetPrefix}/layout-first.tar.gz",
+                    hostsourcefile:"s3://${AssetBucket}/${AssetPrefix}/layout-random-2.tar.gz",
                     hostentrypoint:"host.py",
                     frameworkversion:"1.3.0",
                     configtrain:"SAGEMAKER",
-                    hyperparameters:{
-                        team:"jmc",
-                        num_shots:"30"
-                    },
+                    hyperparameters:{},
                     metrics:[],
-                    channels:{
-                        train:{
-                            path:"all/data.json"
-                        }
-                    },
+                    channels:{},
                     trainvolumesize:"5",
                     traininstancecount:1,
                     hostinstancetype:"ml.t2.medium",
