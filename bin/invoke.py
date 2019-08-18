@@ -11,7 +11,7 @@ session = boto3.Session(profile_name=config["profile"])
 
 # need to get the outputs of the cloudformation so we know what endpoints to send requests to
 output=subprocess.check_output(
-    ['../templates/main/bin/output.js']).decode('utf-8')
+    ['./output.js']).decode('utf-8')
 output=json.loads(output)
 
 client = session.client('sagemaker-runtime')

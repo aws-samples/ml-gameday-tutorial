@@ -2,8 +2,8 @@
 __dirname="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export AWS_PROFILE=$(node -e "console.log(require('$__dirname'+'/../config').profile)")
 export AWS_DEFAULT_REGION=$(node -e "console.log(require('$__dirname'+'/../config').region)")
-BUCKET=$($__dirname/../templates/bootstrap/bin/output.js | jq .AssetBucket --raw-output)
-PREFIX=$($__dirname/../templates/bootstrap/bin/output.js | jq .AssetPrefix --raw-output)
+BUCKET=$($__dirname/output.js | jq .AssetBucket --raw-output)
+PREFIX=$($__dirname/output.js | jq .AssetPrefix --raw-output)
 
 BLUE=$(tput setaf 4)
 RESET=$(tput sgr0)

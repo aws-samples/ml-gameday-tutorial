@@ -4,7 +4,7 @@ var sns=new aws.SNS()
 var cloudformation=new aws.CloudFormation()
 var step=new aws.StepFunctions()
 var config=require('../config')
-var GetOutput=require('../templates/main/bin/output').run
+var GetOutput=require('./output').run
 
 GetOutput().then(async output=>{
     var result=await sns.publish({
