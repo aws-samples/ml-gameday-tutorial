@@ -3,12 +3,8 @@ __dirname="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export AWS_PROFILE=$(node -e "console.log(require('$__dirname'+'/../config').profile)")
 export AWS_DEFAULT_REGION=$(node -e "console.log(require('$__dirname'+'/../config').region)")
 
-BUCKET=$(node -e "console.log(require('$__dirname'+'/../config').parameters.GameArchiveBucket)")
-
-BLUE=$(tput setaf 4)
-RESET=$(tput sgr0)
-echo bootstrap bucket is $BLUE$BUCKET/$PREFIX$RESET
-
+BUCKET=$($__dirname/output.js | jq ".GameArchiveBucket" --raw-output)
+echo $BUCKET
 DATA_DIR=$__dirname/../data
 mkdir -p $DATA_DIR/tmp 
 rm -rf $DATA_DIR/tmp/*;

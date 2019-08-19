@@ -1,22 +1,10 @@
 TEMPLATES=$(shell for l in $$(ls ./templates );do echo templates/$$l;done)
 .PHONY: build containers lambda website assets
 
-all: build containers lambda templates assets
-
-assets: build 
-	cp -r ./assets/* ./build
-
-lambda: build
-	make -C lambda
+all: build containers 
 
 build:
-	mkdir -p build; mkdir -p build/templates ; mkdir -p build/lambda; mkdir -p build/sagebuild/lambda
+	mkdir -p build; mkdir -p build
 
 containers: build
 	make -C containers
-
-templates: build
-	for l in $(TEMPLATES); do	\
-		make -C $$l; \
-	done;			
-

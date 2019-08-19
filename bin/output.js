@@ -1,9 +1,7 @@
 #! /usr/bin/env node
-var check=require('./check')
 var aws=require('./aws')
 var config=require('../config')
 var cf=new aws.CloudFormation({region:config.region})
-var name=require('./name')
 var _=require('lodash')
 if(require.main===module){
     run().then(x=>console.log(JSON.stringify(x,null,2)))

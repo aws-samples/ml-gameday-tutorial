@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@dagrejs/graphlib": "^2.1.4",
+    "args": "^5.0.1",
     "aws-lex-web-ui": "github:awslabs/aws-lex-web-ui",
     "aws-sdk": "^2.340.0",
     "axios": "^0.18.0",
