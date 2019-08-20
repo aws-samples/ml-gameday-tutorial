@@ -8,14 +8,23 @@ var ssm=new aws.SSM()
 var config=require('../config')
 var GetOutput=require('./output').run
 var deploy=require('../deploy-config')
+const { exec } = require('child_process')
+
 args.option('pipeline',"layout or shoot, which pipeline to start")
-    .example("startPipline --pipeline Layout","starts the Layout pipeline")
+    .example("startPipline --pipeline layout","starts the Layout pipeline")
+    .example("startPipline --pipeline shoot","starts the Shoot pipeline")
 const flags=args.parse(process.argv)
 var pipeline=flags.pipeline==="shoot" ? "ShootLaunchTopic" : "LayoutLaunchTopic"
 var paramstore=flags.pipeline==="shoot" ? "ShootParams" : "LayoutParams"
 var statemachine=flags.pipeline==="shoot" ? "ShootStateMachine" : "LayoutStateMachine"
 
-GetOutput().then(async output=>{
+console.log("uploading code")
+run(`${__dirname}/upload_code.sh`)
+.then(x=>{
+    console.log("getting stack output")
+    return GetOutput()
+})
+.then(async output=>{
     console.log("Updating Parameter store")
     var params=JSON.parse((await ssm.getParameter({
         Name:output[paramstore]
@@ -34,7 +43,7 @@ GetOutput().then(async output=>{
         Message:"{}",
         TopicArn:output[pipeline]   
     }).promise()
-    console.log("pipeline started succesfully")
+    console.log("pipeline started succesfully. waiting to finish")
     return output
 })
 .then(async output=>{
@@ -62,3 +71,13 @@ GetOutput().then(async output=>{
     console.log("SageBuild pipeline failed")
     console.log(e)
 })
+
+function run(cmd) {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) return reject(error)
+      if (stderr) return reject(stderr)
+      resolve(stdout)
+    })
+  })
+}
