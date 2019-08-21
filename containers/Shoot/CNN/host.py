@@ -70,7 +70,7 @@ def transform_fn(model, request_body, content_type, accept_type):
                 if input_object["board"][y][x]==0:
                     break
 
-        input_object["session"]["shoot-type"]="DenseNet"
+        input_object["session"]["shootType"]="CNNNet"
         return bytearray(json.dumps({
             "shot":{
                 "x":x,

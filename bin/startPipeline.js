@@ -7,19 +7,22 @@ var args=require('args')
 var ssm=new aws.SSM()
 var config=require('../config')
 var GetOutput=require('./output').run
-var deploy=require('../deploy-config')
 const { exec } = require('child_process')
 
 args.option('pipeline',"layout or shoot, which pipeline to start")
     .example("startPipline --pipeline layout","starts the Layout pipeline")
     .example("startPipline --pipeline shoot","starts the Shoot pipeline")
 const flags=args.parse(process.argv)
+if(!flats.pipeline.match(/shoot|layout/)){
+    console.log("pipeline must be either shoot or layout")
+    process.exit()
+}
 var pipeline=flags.pipeline==="shoot" ? "ShootLaunchTopic" : "LayoutLaunchTopic"
 var paramstore=flags.pipeline==="shoot" ? "ShootParams" : "LayoutParams"
 var statemachine=flags.pipeline==="shoot" ? "ShootStateMachine" : "LayoutStateMachine"
 
-console.log("uploading code")
-run(`${__dirname}/upload_code.sh`)
+console.log("building and uploading code")
+run('npm run upload').then(console.log)
 .then(x=>{
     console.log("getting stack output")
     return GetOutput()
@@ -29,8 +32,8 @@ run(`${__dirname}/upload_code.sh`)
     var params=JSON.parse((await ssm.getParameter({
         Name:output[paramstore]
     }).promise()).Parameter.Value)
-    Object.assign(params, deploy[flags.pipeline])
-
+    Object.assign(params, require(`../${flats.pipeline}-config`))
+    
     await ssm.putParameter({
         Name:output[paramstore],
         Type:"String",

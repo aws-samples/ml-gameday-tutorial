@@ -46,7 +46,7 @@ def transform_fn(model, request_body, content_type, accept_type):
                     if input_object["board"][x][y]==0:
                         break
 
-        input_object["session"]["shoot-type"]="Bayes"
+        input_object["session"]["shootType"]="Bayes"
         return bytearray(json.dumps({
             "shot":shot,
             "session":input_object["session"]

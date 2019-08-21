@@ -1,0 +1,27 @@
+{
+    "deployEndpoint":true,
+    "trainmaxrun":5,
+    "inputmode":"File",
+    "trainsourcefile":"shoot-line.tar.gz",
+    "trainentrypoint":"train.py",
+    "hostsourcefile":"shoot-line.tar.gz",
+    "hostentrypoint":"host.py",
+    "frameworkversion":"1.3.0",
+    "configtrain":"SAGEMAKER",
+    "hyperparameters":{},
+    "metrics":[{
+        "Name":"Validation",
+        "Regex":"Testing loss: (.*?);"
+    },{
+        "Name":"Training",
+        "Regex":"Training loss: (.*?);"
+    },{
+        "Name":"Throughput",
+        "Regex":"Throughput=(.*?);"
+    }],
+    "channels":{},
+    "trainvolumesize":"5",
+    "traininstancecount":1,
+    "hostinstancetype":"ml.m5.xlarge",
+    "traininstancetype":"ml.m5.large"
+}

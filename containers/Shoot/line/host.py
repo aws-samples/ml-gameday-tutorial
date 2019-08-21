@@ -23,7 +23,7 @@ def transform_fn(model, request_body, content_type, accept_type):
         x=input_object["session"]["count"]%len(input_object["board"])
         y=input_object["session"]["count"]//len(input_object["board"][0])
         input_object["session"]["count"]+=1
-        input_object["session"]["shoot-type"]="line"
+        input_object["session"]["shootType"]="line"
         return bytearray(json.dumps({
             "shot":{
                 "x":x,
