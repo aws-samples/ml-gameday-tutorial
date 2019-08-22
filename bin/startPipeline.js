@@ -13,7 +13,7 @@ args.option('pipeline',"layout or shoot, which pipeline to start")
     .example("startPipline --pipeline layout","starts the Layout pipeline")
     .example("startPipline --pipeline shoot","starts the Shoot pipeline")
 const flags=args.parse(process.argv)
-if(!flats.pipeline.match(/shoot|layout/)){
+if(!flags.pipeline.match(/shoot|layout/)){
     console.log("pipeline must be either shoot or layout")
     process.exit()
 }
@@ -32,7 +32,7 @@ run('npm run upload').then(console.log)
     var params=JSON.parse((await ssm.getParameter({
         Name:output[paramstore]
     }).promise()).Parameter.Value)
-    Object.assign(params, require(`../${flats.pipeline}-config`))
+    Object.assign(params, require(`../${flags.pipeline}-config`))
     
     await ssm.putParameter({
         Name:output[paramstore],
