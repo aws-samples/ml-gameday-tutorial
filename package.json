@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "jupyter": "cd notebooks && jupyter notebook",
+    "jupyter": "jupyter notebook",
     "upload":"make && ./bin/upload_code.sh"
   },
   "keywords": [],
