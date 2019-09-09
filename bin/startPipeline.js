@@ -22,7 +22,9 @@ var paramstore=flags.pipeline==="shoot" ? "ShootParams" : "LayoutParams"
 var statemachine=flags.pipeline==="shoot" ? "ShootStateMachine" : "LayoutStateMachine"
 
 console.log("building and uploading code")
+
 run('npm run upload').then(console.log)
+.catch(console.log)
 .then(x=>{
     console.log("getting stack output")
     return GetOutput()
