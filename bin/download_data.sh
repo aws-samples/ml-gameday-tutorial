@@ -13,12 +13,13 @@ echo "Downloading data"
 aws s3 sync s3://$BUCKET $DATA_DIR/tmp/
 
 echo "uncompressing data"
-rm $DATA_DIR/data-full.json;
+rm $DATA_DIR/data.json;
+rm $DATA_DIR/data.min.json;
 for file in $(find data/tmp/ -name '*.gz' | sort -nr); do
     name=$(basename $file | cut  -d. -f1)
-    cat $file | gunzip >> $DATA_DIR/data-full.json
+    cat $file | gunzip >> $DATA_DIR/data.json
 done
-head -n 100 $DATA_DIR/data-full.json > $DATA_DIR/data.json
+head -n 100 $DATA_DIR/data.json > $DATA_DIR/data.min.json
 
-echo "Data file is located at $DATA_DIR/data-full.json"
-echo "sample data file is located at $DATA_DIR/data.json"
+echo "Data file is located at $DATA_DIR/data.json"
+echo "sample data file is located at $DATA_DIR/data.min.json"
