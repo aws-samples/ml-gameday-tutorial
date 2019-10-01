@@ -8,3 +8,4 @@ config.json
 data
 node_modules
 containers/**/*.pyc
+.idea/*
