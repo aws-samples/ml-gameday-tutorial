@@ -11,7 +11,7 @@ os.environ["SM_CHANNEL_MODEL"]="./mock/out"
 from train import *
 if _train:
     train({
-        "epochs":200,
+        "epochs":10,
         "warm_up":1,
         "depth":15,
         "width":8,
