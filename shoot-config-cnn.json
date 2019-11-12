@@ -30,6 +30,6 @@
     "channels":{"train":{"path":"all/data.json"}},
     "trainvolumesize":"5",
     "traininstancecount":1,
-    "hostinstancetype":"ml.m5.large",
-    "traininstancetype":"ml.m5.xlarge"
+    "hostinstancetype":"ml.m5.xlarge",
+    "traininstancetype":"ml.m5.large"
 }
