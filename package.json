@@ -15,7 +15,7 @@
     "args": "^5.0.1",
     "aws-lex-web-ui": "github:awslabs/aws-lex-web-ui",
     "aws-sdk": "^2.340.0",
-    "axios": "^0.18.0",
+    "axios": ">=0.21.1",
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.8.16",
     "bluebird": "^3.5.2",
